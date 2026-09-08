@@ -18,9 +18,26 @@ const homeButton = document.querySelector('#generate-home');
 const homeOutput = document.querySelector('#home-recipe');
 const recipeModal = document.querySelector('#recipe-modal');
 let lastCuisinePick = {};
+let activePantryIngredients = [];
 
-function pickRecipe(cuisine = 'any') {
-  const matches = recipes.filter((recipe) => cuisine === 'any' || recipe.cuisine === cuisine || recipe.cuisine === 'any');
+function normalizeIngredient(value) {
+  return value.toLowerCase().replace(/\([^)]*\)/g, '').replace(/\d+[\d/\s]*(g|kg|ml|l|tbsp|tsp|can)?/g, '').replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim().replace(/ies$/, 'y').replace(/s$/, '');
+}
+
+function ingredientMatches(recipeIngredient, pantryIngredient) {
+  const recipe = normalizeIngredient(recipeIngredient);
+  const pantry = normalizeIngredient(pantryIngredient);
+  const aliases = { tomato: ['tomato', 'tomatoes'], chickpea: ['chickpea', 'chickpeas'], bean: ['bean', 'beans'], onion: ['onion', 'onions'], carrot: ['carrot', 'carrots'], pepper: ['pepper', 'peppers'], garlic: ['garlic'], rice: ['rice'], pasta: ['pasta', 'spaghetti', 'linguine'], chicken: ['chicken'], tofu: ['tofu'] };
+  return recipe.includes(pantry) || pantry.includes(recipe) || Object.values(aliases).some((group) => group.some((term) => recipe.includes(term) && pantry.includes(term)));
+}
+
+function matchingRecipes(cuisine, pantryIngredients) {
+  return recipes.filter((recipe) => (cuisine === 'any' || recipe.cuisine === cuisine || recipe.cuisine === 'any') && recipe.ingredients.some((recipeIngredient) => pantryIngredients.some((pantryIngredient) => ingredientMatches(recipeIngredient, pantryIngredient))));
+}
+
+function pickRecipe(cuisine = 'any', pantryIngredients = []) {
+  const matches = pantryIngredients.length ? matchingRecipes(cuisine, pantryIngredients) : recipes.filter((recipe) => cuisine === 'any' || recipe.cuisine === cuisine || recipe.cuisine === 'any');
+  if (!matches.length) return null;
   const last = lastCuisinePick[cuisine];
   const available = matches.filter((recipe) => recipe.id !== last);
   const choice = (available.length ? available : matches)[Math.floor(Math.random() * (available.length ? available : matches).length)];
@@ -30,11 +47,22 @@ function pickRecipe(cuisine = 'any') {
 
 function showMeal(cuisine = document.querySelector('#cuisine')?.value || 'any') {
   if (!output) return;
-  const ingredients = document.querySelector('#ingredients')?.value.trim() || 'your pantry';
-  const recipe = pickRecipe(cuisine);
+  const ingredients = document.querySelector('#ingredients')?.value.trim() || '';
+  activePantryIngredients = ingredients.split(',').map((item) => item.trim()).filter(Boolean);
+  if (!activePantryIngredients.length) {
+    output.className = 'empty-output';
+    output.innerHTML = '<span class="output-glyph">+</span><p>Enter at least one ingredient<br>to find a matching recipe.</p>';
+    return;
+  }
+  const recipe = pickRecipe(cuisine, activePantryIngredients);
+  if (!recipe) {
+    output.className = 'empty-output';
+    output.innerHTML = `<span class="output-glyph">+</span><p>No ${escapeHtml(cuisine === 'any' ? '' : cuisine + ' ')}recipe matches those ingredients yet.<br>Try another cuisine or ingredient.</p>`;
+    return;
+  }
   output.className = 'meal-result result-' + (recipe.id % 2 ? 'blue' : 'yellow');
   output.innerHTML = `<span class="mono">MATCHED TO ${escapeHtml(ingredients)}</span><h2>${recipe.title}</h2><span class="recipe-tag">${recipe.meta}</span><p>Fresh pick: this recipe is a flexible way to use what you have in a ${cuisine === 'any' ? 'surprising' : cuisine} direction.</p><button class="recipe-result-button" type="button">View the full recipe <span>&#8594;</span></button>`;
-  output.querySelector('.recipe-result-button').addEventListener('click', () => openRecipe(recipe));
+  output.querySelector('.recipe-result-button').addEventListener('click', () => openRecipe(recipe, activePantryIngredients));
 }
 
 function showHomeRecipe() {
@@ -48,14 +76,14 @@ if (form) form.addEventListener('submit', (event) => { event.preventDefault(); s
 cuisineButtons.forEach((button) => button.addEventListener('click', () => { document.querySelector('#cuisine').value = button.dataset.cuisine; showMeal(button.dataset.cuisine); }));
 if (homeButton) homeButton.addEventListener('click', showHomeRecipe);
 
-function openRecipe(recipe) {
+function openRecipe(recipe, pantryIngredients = []) {
   if (!recipeModal) return;
   document.querySelector('#recipe-modal-meta').textContent = recipe.meta;
   document.querySelector('#recipe-modal-title').textContent = recipe.title;
   document.querySelector('#recipe-prep').textContent = `${recipe.prep} min`;
   document.querySelector('#recipe-cook').textContent = `${recipe.cook} min`;
   document.querySelector('#recipe-total').textContent = `${recipe.prep + recipe.cook} min`;
-  document.querySelector('#recipe-ingredients').innerHTML = recipe.ingredients.map((item) => `<li>${item}</li>`).join('');
+  document.querySelector('#recipe-ingredients').innerHTML = recipe.ingredients.map((item) => `<li${pantryIngredients.length && !pantryIngredients.some((pantryIngredient) => ingredientMatches(item, pantryIngredient)) ? ' style="color:#c63d35;font-weight:700"' : ''}>${item}</li>`).join('');
   document.querySelector('#recipe-steps').innerHTML = recipe.steps.map((item) => `<li>${item}</li>`).join('');
   recipeModal.hidden = false;
   document.body.classList.add('modal-open');

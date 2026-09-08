@@ -1,3 +1,118 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Find meal ideas based on ingredients, cuisine, time, and appetite."><title>Make a meal / Morrow Table</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head>
-<body><header class="site-header shell"><a class="brand" href="index.html"><span class="brand-mark">M</span><span>Morrow <b>Table</b></span></a><nav class="site-nav"><a href="index.html">Home</a><a class="active" href="learn.html">Make a meal</a><a href="studio.html">Top 10</a></nav><a class="header-cta" href="studio.html">Browse favorites <span>&#8599;</span></a></header><main><section class="page-intro shell"><p class="eyebrow">02 / Pantry matcher</p><h1>What is in the<br><em>kitchen today?</em></h1><p class="page-lede">Choose a cuisine mood. Each selection generates a fresh recipe suggestion you can open for the complete method.</p></section><section class="matcher-layout shell"><div class="matcher-panel"><div class="panel-top"><span class="mono">BUILD A PLATE</span><span class="status-dot">no sign-in</span></div><form id="meal-form"><label for="ingredients">What do you have?</label><input id="ingredients" name="ingredients" type="text" placeholder="tomatoes, chickpeas, rice, spinach"><label for="cuisine">Choose a cuisine mood</label><select id="cuisine" name="cuisine"><option value="any">Surprise me</option><option value="mediterranean">Mediterranean</option><option value="mexican">Mexican</option><option value="indian">Indian</option><option value="east-asian">East Asian</option><option value="italian">Italian</option></select><label for="time">How much time do you have?</label><div class="time-options"><label><input type="radio" name="time" value="quick" checked><span>20 min</span></label><label><input type="radio" name="time" value="slow"><span>I have time</span></label></div><button class="button button-dark" type="submit">Find my meals <span>&#8594;</span></button></form></div><div class="matcher-output" aria-live="polite"><div class="panel-top"><span class="mono">YOUR SUGGESTION</span><span class="mono">MATCH / LIVE</span></div><div id="meal-output" class="empty-output"><span class="output-glyph">+</span><p>Select a cuisine to<br>generate a recipe.</p></div></div></section><section class="cuisine-strip shell"><p class="eyebrow">Choose again for a fresh idea</p><div class="cuisine-list"><button data-cuisine="mediterranean">sunny / Mediterranean</button><button data-cuisine="mexican">bright / Mexican</button><button data-cuisine="indian">warm / Indian</button><button data-cuisine="east-asian">savory / East Asian</button><button data-cuisine="italian">slow / Italian</button></div></section><section class="recipe-modal" id="recipe-modal" hidden><div class="modal-backdrop" data-close-recipe></div><div class="recipe-dialog" role="dialog" aria-modal="true" aria-labelledby="recipe-modal-title"><button class="modal-close" type="button" data-close-recipe aria-label="Close recipe">&#10005;</button><span class="eyebrow" id="recipe-modal-meta">Recipe</span><h2 id="recipe-modal-title">Recipe title</h2><div class="recipe-times"><span><b id="recipe-prep">0 min</b> prep</span><span><b id="recipe-cook">0 min</b> cook</span><span><b id="recipe-total">0 min</b> total</span></div><div class="modal-columns"><div><h3>Ingredients</h3><ul id="recipe-ingredients"></ul></div><div><h3>How to make it</h3><ol id="recipe-steps"></ol></div></div></div></section></main><footer class="site-footer shell"><div class="brand"><span class="brand-mark">M</span><span>Morrow <b>Table</b></span></div><p>For the meals between the plans.</p><span class="mono">&#169; 2026</span></footer><script src="script.js"></script></body></html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Find meal ideas based on ingredients, cuisine, time, and appetite.">
+    <title>Make a meal / Morrow Table</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="site-header shell">
+        <a class="brand" href="index.html">
+            <span class="brand-mark">M</span>
+            <span>Morrow <b>Table</b></span>
+        </a>
+        <nav class="site-nav">
+            <a href="index.html">Home</a>
+            <a class="active" href="learn.html">Make a meal</a>
+            <a href="studio.html">Top 10</a>
+        </nav>
+        <a class="header-cta" href="studio.html">Browse favorites <span>&#8599;</span></a>
+    </header>
+    <main>
+        <section class="page-intro shell">
+            <p class="eyebrow">02 / Pantry matcher</p>
+            <h1>What is in the<br><em>kitchen today?</em></h1>
+            <p class="page-lede">Choose a cuisine mood. Each selection generates a fresh recipe suggestion you can open for the complete method.</p>
+        </section>
+        <section class="matcher-layout shell">
+            <div class="matcher-panel">
+                <div class="panel-top">
+                    <span class="mono">BUILD A PLATE</span>
+                    <span class="status-dot">no sign-in</span>
+                </div>
+                <form id="meal-form">
+                    <label for("ingredients">What do you have?</label>
+                    <input id("ingredients") name("ingredients") type("text") placeholder("tomatoes, chickpeas, rice, spinach")>
+                    <label for("cuisine">Choose a cuisine mood</label>
+                    <select id("cuisine") name("cuisine")>
+                        <option value("any")>Surprise me</option>
+                        <option value("mediterranean")>Mediterranean</option>
+                        <option value("mexican")>Mexican</option>
+                        <option value("indian")>Indian</option>
+                        <option value("east-asian")>East Asian</option>
+                        <option value("italian")>Italian</option>
+                    </select>
+                    <label for("time">How much time do you have?</label>
+                    <div class("time-options")>
+                        <label)
+                            <input type("radio") name("time") value("quick") checked)
+                            <span>20 min</span)
+                        </label)
+                        <label)
+                            <input type("radio") name("time") value("slow"))
+                            <span>I have time</span)
+                        </label)
+                    </div)
+                    <button class("button button-dark") type("submit"))>Find my meals<span>&#8594;</span></button)
+                </form)
+            </div)
+            <div class("matcher-output") aria-live("polite")>
+                <div class("panel-top") >
+                    <span class("mono"))>YOUR SUGGESTION</span >
+                    <span class("mono"))>MATCH / LIVE</span >
+                </div)
+                <div id("meal-output") class("empty-output") >
+                    <span class("output-glyph"))>+</span >
+                    <<p>Select a cuisine to<br >generate a recipe.</p >
+                </div)
+            </div)
+        </section)
+        <section class("cuisine-strip shell")
+            <<p class["eyebrow"] >Choose again for a fresh idea</p >
+            <<div className["cuisine-list"] >
+                <<button data-cuisine["mediterranean"] >sunny / Mediterranean</button >
+                <<button data-cuisine["mexican"] >bright / Mexican</button >
+                <<button data-cuisine["indian"] >warm / Indian</button >
+                <<button data-cuisine["east-asian"] >savory / East Asian</button >
+                <<button data-cuisine["italian"] >slow / Italian</button >
+            </div )
+        </section )
+        <<section className["recipe-modal"] id["recipe-modal"] hidden >
+            <<div className["modal-backdrop"] data-close-recipe ></div )
+            <<div className["recipe-dialog"] role["dialog"] aria-modal["true"] aria-labelledby["recipe-modal-title"] >
+                <<button className["modal-close"] type["button"] data-close-recipe aria-label["Close recipe"] >&#10005;</button )
+                <<span className["eyebrow"] id["recipe-modal-meta"] >Recipe</span )
+                <<h2 id["recipe-modal-title"] >Recipe title}</h2 )
+                <<div className["recipe-times"] >
+                    <<span ><b id["recipe-prep"] >0 min}</b> prep}</span )
+                    <<span ><b id["recipe-cook"] >0 min}</b> cook}</span )
+                    <<span ><b id["recipe-total"] >0 min}</b> total}</span )
+                </div )
+                <<div className["modal-columns"] >
+                    <<div >
+                        <<h3 >Ingredients}</h3 )
+                        <<ul id["recipe-ingredients"] ></ul )
+                    </div )
+                    <<div >
+                        <<h3 >How to make it}</h3 )
+                        <<ol id["recipe-steps"] ></ol )
+                    </div )
+                </div )
+            </div )
+        </section )
+    </main )
+    <-footer className['site-footer'] shell ]
+        <-div className['brand'] ]
+            <-span className['brand-mark'] ]M]</ span ]
+            <- span ]Morrow <- b ]Table]</ b ]]</ span ]
+        ]]
+        <- p ]For the meals between the plans.] p ]
+        <- span ]© 2026]</ span ]
+    ]]
+    <-script src['script.js'] ></script ]
+]
